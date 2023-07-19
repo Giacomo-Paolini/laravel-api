@@ -55,7 +55,7 @@ class ProjectController extends Controller
         $newProject->fill($data);
         $newProject->save();
 
-        $newProject->technologies()->attach($data['technology']);
+        $newProject->technologies()->attach($data['technologies']);
 
         return to_route("admin.projects.show", $newProject);
     }
@@ -94,7 +94,14 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        //
+        $data = $request->validated();
+
+        $project->fill($data);
+        $project->update($data);
+
+        $project->technologies()->sync( $data->types );
+
+        return to_route("admin.posts.show", $project);
     }
 
     /**
